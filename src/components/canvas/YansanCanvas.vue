@@ -2282,6 +2282,8 @@ function executeBaoDanPlay(seat: number) {
   soundFX.playCardSnap(false);
   soundFX.speakAction('baodan_win', { isFemale: seat === 1 });
 
+  afterComboPlayed(seat, cb, seat !== mySeat.value);
+
   if (seat === mySeat.value && !props.isPracticeMode && props.ws && props.ws.readyState === WebSocket.OPEN) {
     props.ws.send(JSON.stringify({
       type: 'game_move',
@@ -2291,16 +2293,16 @@ function executeBaoDanPlay(seat: number) {
         action: 'play',
         seat: mySeat.value,
         combo: cb,
+        winner: winnerSeat.value,
       },
       event: {
         action: 'play',
         seat: mySeat.value,
         combo: cb,
+        winner: winnerSeat.value,
       }
     }));
   }
-
-  afterComboPlayed(seat, cb, seat !== mySeat.value);
 }
 
 /**
@@ -2700,6 +2702,8 @@ function handlePlay() {
   soundFX.speakAction(isFirstTurn.value ? 'yansan_lead' : combo.label);
   isFirstTurn.value = false;
 
+  afterComboPlayed(mySeat.value, combo);
+
   if (!props.isPracticeMode && props.ws && props.ws.readyState === WebSocket.OPEN) {
     props.ws.send(JSON.stringify({
       type: 'game_move',
@@ -2709,16 +2713,16 @@ function handlePlay() {
         action: 'play',
         seat: mySeat.value,
         combo,
+        winner: winnerSeat.value,
       },
       event: {
         action: 'play',
         seat: mySeat.value,
         combo,
+        winner: winnerSeat.value,
       }
     }));
   }
-
-  afterComboPlayed(mySeat.value, combo);
 }
 
 function executePassFlow(seat: number, isRemote: boolean = false) {

@@ -567,7 +567,11 @@ wss.on('connection', (ws) => {
             return false;
           }
 
-          // 核心规则校验：真实玩家进入游戏严禁人机补位，必须全员真人玩家且全部点击“继续下一局”准备就绪！
+          // 若房间状态为 waiting (等候队列匹配中)，满员入座即全员就绪；若为 finished (上一局刚完)，需全员点击“继续下一局”
+          if (room.status === 'waiting') {
+            validPlayers.forEach((pl: any) => { pl.isReady = true; });
+          }
+
           const allReady = validPlayers.every((pl: any) => Boolean(pl.isReady));
 
           if (!allReady) {

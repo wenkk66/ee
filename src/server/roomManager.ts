@@ -113,6 +113,10 @@ export class RoomManager {
         return false;
       }
 
+      if (room.status === 'waiting') {
+        validPlayers.forEach((pl: any) => { pl.isReady = true; });
+      }
+
       const allReady = validPlayers.every((pl: any) => Boolean(pl.isReady));
 
       if (!allReady) {
